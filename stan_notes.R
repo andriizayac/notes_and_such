@@ -4,6 +4,8 @@ library(shinystan)
 library(devtools)
 library(StanHeaders)
 library(ggplot2)
+rstan_options(auto_write = T)
+options(mc.cores = parallel::detectCores())
 
 list33 <- list(growth = dat_list3$growth,
                    sizet = dat_list3$size,
@@ -19,10 +21,10 @@ list33$climmat <- ifelse(is.na(list33$sizemat) == T, NA,list33$climmat)
 list33$N <- length(dat_list3$growth)
 list33$pmat <- ifelse(is.na(list33$sizemat)==T,0,1)
 ###################################################
-rt <- stanc(file = "test.stan", model_name = "t")
+rt <- stanc(file = "test1.stan", model_name = "fit4")
 sm <- stan_model(stanc_ret = rt, verbose = T)
-fit <- sampling(sm, data = list01, iter = 2000, chains = 4)
-#####################################################
+fit3 <- sampling(sm, data = list02, iter = 2000, chains = 4)
+   #####################################################
 
 list01$sizemat <- ifelse(is.na(list01$sizemat) ==T,0,list01$sizemat)
 list01$distmat <- ifelse(is.na(list01$distmat) ==T,0,list01$distmat)
