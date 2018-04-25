@@ -19,29 +19,34 @@ parameters {
   real I; 					// intercept
   real a;						// scaling parameter
   real b;
+  //real c;
   real target_sizet;			// focal pl size effect
   real<lower = 0> sigma;					// standard deviation
 }
-model{
+transformed parameters{
   matrix [N,476] comp;
-  I ~ normal(1,10);
-  a ~ uniform(-5,5);
-  b ~ normal(1,2);
-  target_sizet ~ normal(1,3);
-  sigma ~ normal(5,10);
+}
+model{
+  //matrix [N,476] comp;
+  I ~ normal(1,2);
+  a ~ normal(0,3);
+  b ~ normal(1,3);
+  //c ~ normal(0,3);
+  target_sizet ~ normal(1,2);
+  sigma ~ normal(5,2);
   
   //growth ~ normal(I + sizet*target_size + row_sums(sizemat ./ exp(distmat*b)), sigma);
   //growth ~ normal(I + sizet*target_size + b*comp_index, sigma);
-  comp = (sizemat ./ exp(distmat*b)) .* pmat ;
+  comp = ((sizemat) ./ exp(distmat * b));// .* pmat ;
   for (n in 1:N){
     //for (i in 1:476){
       //if(pmat[n,i] == 1){
         
-        growth[n] ~ normal(I + sizet[n] * target_sizet + a*sum(comp[n]), sigma);
+        growth[n] ~ normal(I + sizet[n] * target_sizet + a*sum(comp[n,]), sigma);
       //}
     //}
   }
 }
 generated quantities{
- 
+
 }
